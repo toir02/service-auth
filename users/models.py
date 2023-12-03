@@ -5,6 +5,8 @@ from django.db import models
 class User(AbstractUser):
     phone_number = models.CharField(max_length=12, verbose_name='Номер телефона', unique=True)
     invite_code = models.CharField(max_length=6, verbose_name='Код приглашения', unique=True, null=True, blank=True)
+    inviting_user_invite_code = models.CharField(max_length=6, verbose_name='Инвайт-код пригласившего', null=True,
+                                                 blank=True)
 
     class Meta:
         verbose_name = 'Пользователь'
