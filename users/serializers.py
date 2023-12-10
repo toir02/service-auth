@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'phone_number', 'is_active', 'verification_code')
+        fields = ('id', 'username', 'password', 'phone_number', 'verification_code')
         validators = [
             PhoneNumberValidator(field='phone_number')
         ]
@@ -20,10 +20,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'phone_number', 'invited_users', 'activated_code', 'invite_code')
+        fields = ('id', 'username', 'password', 'phone_number', 'invited_users', 'activated_invite_code', 'invite_code')
 
     def get_invited_users(self, obj):
         if obj.invite_code:
-            invited_users = User.objects.filter(invite_code=obj.invite_code)
-            return ProfileSerializer(invited_users, many=True).data
+            invited_users = User.objects.filter(activated_invite_code=obj.invite_code)
+            return self.__class__(invited_users, many=True).data
         return []
