@@ -8,12 +8,15 @@ from rest_framework.response import Response
 
 from users.models import User
 from users.permissions import IsUnauthenticated
-from users.serializers import UserSerializer
-from users.services import create_verification_code
+from users.serializers import RegisterSerializer
+from users.services import (
+    create_verification_code,
+    create_invite_code
+)
 
 
 class UserCreateAPIView(generics.CreateAPIView):
-    serializer_class = UserSerializer
+    serializer_class = RegisterSerializer
     permission_classes = [IsUnauthenticated]
 
     def perform_create(self, serializer):
@@ -28,3 +31,23 @@ class UserCreateAPIView(generics.CreateAPIView):
         time.sleep(2)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UserVerifyView(generics.UpdateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [IsUnauthenticated]
+    queryset = User.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        invite_code = create_invite_code()
+
+        while User.objects.filter(invite_code=invite_code).exists():
+            invite_code = create_invite_code()
+
+        instance.invite_code = invite_code
+        instance.is_active = True
+        instance.save()
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
