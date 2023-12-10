@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from users.models import User
 from users.permissions import IsUnauthenticated
-from users.serializers import RegisterSerializer
+from users.serializers import RegisterSerializer, ProfileSerializer
 from users.services import (
     create_verification_code,
     create_invite_code
@@ -51,3 +51,8 @@ class UserVerifyView(generics.UpdateAPIView):
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserRetrieveAPIView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    queryset = User.objects.all()
