@@ -25,5 +25,5 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_invited_users(self, obj):
         if obj.invite_code:
             invited_users = User.objects.filter(activated_invite_code=obj.invite_code)
-            return self.__class__(invited_users, many=True).data
+            return [user.phone_number for user in invited_users]
         return []
