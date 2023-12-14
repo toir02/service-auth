@@ -70,7 +70,7 @@ class ActivateInviteCodeAPIView(generics.UpdateAPIView):
             return Response({'error': 'Invite code to activate is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            instance = User.objects.get(invite_code=invite_code_to_activate)
+            User.objects.get(invite_code=invite_code_to_activate)
         except User.DoesNotExist:
             return Response({'error': 'Invalid invite code.'}, status=status.HTTP_400_BAD_REQUEST)
 
