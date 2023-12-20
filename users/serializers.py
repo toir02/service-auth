@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'phone_number', 'verification_code')
+        fields = ('id', 'username', 'password', 'phone_number', 'verification_code', 'is_active')
         validators = [
             PhoneNumberValidator(field='phone_number')
         ]
